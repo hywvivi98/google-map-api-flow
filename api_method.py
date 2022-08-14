@@ -104,7 +104,7 @@ class GoogleMapAPI:
         object_name: str = None,
         file_name: str = None,
         df: pd.DataFrame = None,
-        fromLocal: bool = False,
+        from_local_default_false: bool = False,
     ) -> bool:
 
         # If S3 object_name was not specified, use file_name
@@ -121,7 +121,7 @@ class GoogleMapAPI:
 
         try:
             # import df/list directly to S3
-            if fromLocal:
+            if from_local_default_false:
                 # save dataframe as csv file to S3
                 csv_buffer = StringIO()
                 df.to_csv(csv_buffer, index=False)
