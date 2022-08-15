@@ -10,7 +10,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  publish-image-to-dockerhub:
     runs-on: ubuntu-latest
 
     steps:

@@ -22,14 +22,6 @@ class GoogleMapAPI:
         self.aws_access_key_id = ""
         self.aws_secret_access_key = ""
 
-        # self.api_key = "AIzaSyDxdWLEN4x--d6eieUBaPs2GCCjXdQTOAE"
-        # self.min_rating = 3.0
-        # self.max_results = 30
-        # self.s3_bucket = "google-map-api"
-        # self.region_name = "us-east-2"
-        # self.aws_access_key_id = "AKIAQ6TZREMYJHBZXT5E"
-        # self.aws_secret_access_key = "jkcLLYmed5uHbHWLNLNYjgKU0k86FL5wsO2Vh6Ja"
-
     def get_gmap_details(self) -> None:
         self.api_key = input("Enter your Google map API key: ")
         self.min_rating = float(
