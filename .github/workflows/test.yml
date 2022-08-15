@@ -36,6 +36,7 @@ jobs:
           pip install pytest-cov
           pytest google_map_api_method/test_remote.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
 
-      - name: Run tests
-        run: |
-          python google_map_api_method/test_remote.py
+      # An easier way to run test:
+      # - name: Run tests
+      #   run: |
+      #     python google_map_api_method/test_remote.py
