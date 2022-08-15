@@ -58,20 +58,23 @@ class GoogleMapAPI:
         except:
             print("Something went wrong with requests.get")
 
-        # set next-token-page
-        if (self.max_results > 20) and response_data["next_page_token"] != "":
-            page_token = response_data["next_page_token"]
-            new_url = (
-                "https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=%s&key=%s"
-                % (page_token, self.api_key)
-            )
-            response = requests.get(new_url)
-            while response.json().get("status") != "OK":
-                sleep(random())
+        try:
+            # set next-token-page
+            if (self.max_results > 20) and response_data["next_page_token"] != "":
+                page_token = response_data["next_page_token"]
+                new_url = (
+                    "https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=%s&key=%s"
+                    % (page_token, self.api_key)
+                )
                 response = requests.get(new_url)
-                new_response_data = response.json()
-            # Add additional results from more pages when max_results is greater than 20
-            response_data["results"].extend(new_response_data["results"])
+                while response.json().get("status") != "OK":
+                    sleep(random())
+                    response = requests.get(new_url)
+                    new_response_data = response.json()
+                # Add additional results from more pages when max_results is greater than 20
+                response_data["results"].extend(new_response_data["results"])
+        except (KeyError, TypeError) as e:
+            return f"Cannot find: {e}, check if your api key is valid"
 
         results_ = []
         for item in response_data["results"]:
