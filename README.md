@@ -38,4 +38,4 @@ docker run -it hellovivvvv/google-map-api:latest
 
 
 ## Something Else?
-I also wrote a Medium blog with some interesting stories about this mini-project, welcome to take a look and drop any comments!
+I also wrote a Medium blog with some interesting stories about this mini-project, welcome to take a look and drop any comments! Link here: https://medium.com/@yh3406/how-to-convince-your-data-eng-manager-not-having-sweetgreen-all-the-time-d415b2d59be9
