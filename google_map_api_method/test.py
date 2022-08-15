@@ -1,9 +1,9 @@
 import unittest
 from secret import (
     API_KEY,
-    REGION_NAME,
-    AWS_ACCESS_KEY_ID,
-    AWS_SECRET_ACCESS_KEY,
+    # REGION_NAME,
+    # AWS_ACCESS_KEY_ID,
+    # AWS_SECRET_ACCESS_KEY,
 )
 from api_method import GoogleMapAPI
 
