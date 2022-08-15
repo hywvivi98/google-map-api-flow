@@ -22,7 +22,7 @@ class GoogleMapAPI:
         self.aws_access_key_id = ""
         self.aws_secret_access_key = ""
 
-    def get_gmap_details(self):
+    def get_gmap_details(self) -> None:
         self.api_key = input("Enter your Google map API key: ")
         self.min_rating = float(
             input("Enter the lowest restaurant rating you could accept (eg: 0.0): ")
@@ -31,7 +31,7 @@ class GoogleMapAPI:
             input("Enter the maximal number of result you want to get (eg: 30): ")
         )
 
-    def get_aws_credentials(self):
+    def get_aws_credentials(self) -> None:
         self.s3_bucket = input(
             "Enter your desired AWS S3 bucket name (eg:google-map-api): "
         )
@@ -76,25 +76,27 @@ class GoogleMapAPI:
         except (KeyError, TypeError) as e:
             return f"Cannot find: {e}, check if your api key is valid"
 
-        results_ = []
+        restaurant = []
         for item in response_data["results"]:
             restaurant_name = item["name"]
             address = item["formatted_address"]
             hours = item["opening_hours"]["open_now"]
-            rating = item[
-                "rating"
-            ]  # if only take item["price_level"], no output, raise exception
+            rating = item["rating"]
             if item["rating"] >= self.min_rating:
                 try:
                     price_level = item["price_level"]
                 except:
                     price_level = None
-            results_.append((restaurant_name, address, hours, price_level, rating))
+                restaurant.append(
+                    (restaurant_name, address, hours, price_level, rating)
+                )
+            else:
+                pass
         # look for maximum results
-        if len(results_) > self.max_results:
-            final_result = results_[: self.max_results]
+        if len(restaurant) > self.max_results:
+            restaurant = restaurant[: self.max_results]
 
-        return final_result
+        return restaurant
 
     def convert_lst_to_df(self, final_result: List[tuple]) -> pd.DataFrame:
         return pd.DataFrame(
