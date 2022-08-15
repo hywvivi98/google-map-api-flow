@@ -22,7 +22,7 @@ class GoogleMapAPI:
         self.aws_access_key_id = ""
         self.aws_secret_access_key = ""
 
-    def get_gmap_details(self):
+    def get_gmap_details(self) -> None:
         self.api_key = input("Enter your Google map API key: ")
         self.min_rating = float(
             input("Enter the lowest restaurant rating you could accept (eg: 0.0): ")
@@ -31,7 +31,7 @@ class GoogleMapAPI:
             input("Enter the maximal number of result you want to get (eg: 30): ")
         )
 
-    def get_aws_credentials(self):
+    def get_aws_credentials(self) -> None:
         self.s3_bucket = input(
             "Enter your desired AWS S3 bucket name (eg:google-map-api): "
         )
@@ -58,40 +58,45 @@ class GoogleMapAPI:
         except:
             print("Something went wrong with requests.get")
 
-        # set next-token-page
-        if (self.max_results > 20) and response_data["next_page_token"] != "":
-            page_token = response_data["next_page_token"]
-            new_url = (
-                "https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=%s&key=%s"
-                % (page_token, self.api_key)
-            )
-            response = requests.get(new_url)
-            while response.json().get("status") != "OK":
-                sleep(random())
+        try:
+            # set next-token-page
+            if (self.max_results > 20) and response_data["next_page_token"] != "":
+                page_token = response_data["next_page_token"]
+                new_url = (
+                    "https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=%s&key=%s"
+                    % (page_token, self.api_key)
+                )
                 response = requests.get(new_url)
-                new_response_data = response.json()
-            # Add additional results from more pages when max_results is greater than 20
-            response_data["results"].extend(new_response_data["results"])
+                while response.json().get("status") != "OK":
+                    sleep(random())
+                    response = requests.get(new_url)
+                    new_response_data = response.json()
+                # Add additional results from more pages when max_results is greater than 20
+                response_data["results"].extend(new_response_data["results"])
+        except (KeyError, TypeError) as e:
+            return f"Cannot find: {e}, check if your api key is valid"
 
-        results_ = []
+        restaurant = []
         for item in response_data["results"]:
             restaurant_name = item["name"]
             address = item["formatted_address"]
             hours = item["opening_hours"]["open_now"]
-            rating = item[
-                "rating"
-            ]  # if only take item["price_level"], no output, raise exception
+            rating = item["rating"]
             if item["rating"] >= self.min_rating:
                 try:
                     price_level = item["price_level"]
                 except:
                     price_level = None
-            results_.append((restaurant_name, address, hours, price_level, rating))
+                restaurant.append(
+                    (restaurant_name, address, hours, price_level, rating)
+                )
+            else:
+                pass
         # look for maximum results
-        if len(results_) > self.max_results:
-            final_result = results_[: self.max_results]
+        if len(restaurant) > self.max_results:
+            restaurant = restaurant[: self.max_results]
 
-        return final_result
+        return restaurant
 
     def convert_lst_to_df(self, final_result: List[tuple]) -> pd.DataFrame:
         return pd.DataFrame(
@@ -104,7 +109,7 @@ class GoogleMapAPI:
         object_name: str = None,
         file_name: str = None,
         df: pd.DataFrame = None,
-        fromLocal: bool = False,
+        from_local_default_false: bool = False,
     ) -> bool:
 
         # If S3 object_name was not specified, use file_name
@@ -121,7 +126,7 @@ class GoogleMapAPI:
 
         try:
             # import df/list directly to S3
-            if fromLocal:
+            if from_local_default_false:
                 # save dataframe as csv file to S3
                 csv_buffer = StringIO()
                 df.to_csv(csv_buffer, index=False)
