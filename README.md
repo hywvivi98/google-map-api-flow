@@ -27,9 +27,9 @@ docker run -it hellovivvvv/google-map-api:latest
 
 - Search Query
 - Google map API key
-- lowest restaurant rating you could accept
-- maximal number of result you want to get
-- desired AWS S3 bucket name
+- The lowest restaurant rating you could accept
+- The maximal number of result you want to get
+- Desired AWS S3 bucket name
 - AWS account region name
 - AWS access key id
 - AWS secret access key
