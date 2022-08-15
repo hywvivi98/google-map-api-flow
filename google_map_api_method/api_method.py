@@ -23,6 +23,9 @@ class GoogleMapAPI:
         self.aws_secret_access_key = ""
 
     def get_gmap_details(self) -> None:
+        """
+        Get Google map API key and user-defined variables for the API call
+        """
         self.api_key = input("Enter your Google map API key: ")
         self.min_rating = float(
             input("Enter the lowest restaurant rating you could accept (eg: 0.0): ")
@@ -32,6 +35,9 @@ class GoogleMapAPI:
         )
 
     def get_aws_credentials(self) -> None:
+        """
+        Get AWS credentials in order to access S3 resources
+        """
         self.s3_bucket = input(
             "Enter your desired AWS S3 bucket name (eg:google-map-api): "
         )
@@ -40,6 +46,26 @@ class GoogleMapAPI:
         self.aws_secret_access_key = input("Enter aws_secret_access_key: ")
 
     def get_restaurant(self) -> List[tuple]:
+        """
+        Call Google map API, return a list of tuple including restaurant information
+            Return e.g.
+                [
+                    (
+                        "restaurant1",
+                        "addresses1",
+                        True,
+                        2,
+                        4.0,
+                    ),
+                    (
+                        "restaurant2",
+                        "addresses2",
+                        True,
+                        2,
+                        4.0,
+                    ),
+                ]
+        """
 
         url = (
             "https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&key=%s"
@@ -59,7 +85,7 @@ class GoogleMapAPI:
             print("Something went wrong with requests.get")
 
         try:
-            # set next-token-page
+            # since the API only returns 20 results per call, to get the full results, we need to set a token to continuously trigger it
             if (self.max_results > 20) and response_data["next_page_token"] != "":
                 page_token = response_data["next_page_token"]
                 new_url = (
@@ -86,6 +112,7 @@ class GoogleMapAPI:
                 hours = False
             try:
                 rating = item["rating"]
+                # only return ratings higher than the user-defined score
                 if item["rating"] >= self.min_rating:
                     try:
                         price_level = item["price_level"]
@@ -95,6 +122,7 @@ class GoogleMapAPI:
                         (restaurant_name, address, hours, price_level, rating)
                     )
                 else:
+                    # ignore records without specified rating score
                     pass
             except KeyError as e:
                 pass
@@ -117,7 +145,10 @@ class GoogleMapAPI:
         df: pd.DataFrame = None,
         from_local_default_false: bool = False,
     ) -> bool:
-
+        """
+        Save a local csv file or a pandas Dataframe to S3.
+            Return True is the file is pushed to S3, return false is the action fails
+        """
         # If S3 object_name was not specified, use file_name
         if object_name is None:
             object_name = os.path.basename(file_name)
