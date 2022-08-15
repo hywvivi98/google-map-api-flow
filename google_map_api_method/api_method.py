@@ -80,17 +80,23 @@ class GoogleMapAPI:
         for item in response_data["results"]:
             restaurant_name = item["name"]
             address = item["formatted_address"]
-            hours = item["opening_hours"]["open_now"]
-            rating = item["rating"]
-            if item["rating"] >= self.min_rating:
-                try:
-                    price_level = item["price_level"]
-                except:
-                    price_level = None
-                restaurant.append(
-                    (restaurant_name, address, hours, price_level, rating)
-                )
-            else:
+            try:
+                hours = item["opening_hours"]["open_now"]
+            except KeyError as e:
+                hours = False
+            try:
+                rating = item["rating"]
+                if item["rating"] >= self.min_rating:
+                    try:
+                        price_level = item["price_level"]
+                    except:
+                        price_level = None
+                    restaurant.append(
+                        (restaurant_name, address, hours, price_level, rating)
+                    )
+                else:
+                    pass
+            except KeyError as e:
                 pass
         # look for maximum results
         if len(restaurant) > self.max_results:
@@ -157,6 +163,7 @@ if __name__ == "__main__":
     GoogleMap = GoogleMapAPI(QUERY)
     GoogleMap.get_gmap_details()
     GoogleMap.get_aws_credentials()
+
     result_list = GoogleMap.get_restaurant()
     result_df = GoogleMap.convert_lst_to_df(result_list)
     GoogleMap.upload_file("restaurant.csv", None, result_df, True)
