@@ -34,4 +34,8 @@ docker run -it hellovivvvv/google-map-api:latest
 - AWS access key id
 - AWS secret access key
 
-  5.After that, you're ready to have a preview of the results in your terminal, and you can get the data in csv format from your S3 bucket
+5.After that, you're ready to have a preview of the results in your terminal, and you can get the data in csv format from your S3 bucket
+
+
+## Something Else?
+I also wrote a Medium blog with some interesting stories about this mini-project, welcome to take a look and drop any comments!
