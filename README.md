@@ -4,8 +4,8 @@
 
 In order to run this project, you need to have:
 
-- Google Map API Key: to be able to retrieve data from the text search API call
-- AWS Account and with attached IAM policies to be able to get access to S3 resources
+- Google Map API Key: to retrieve data from the text search API call
+- AWS Account with properly attached IAM policies: to get access to S3 resources
 
 ## How to Run This Project?
 
