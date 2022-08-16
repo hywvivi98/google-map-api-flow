@@ -9,7 +9,7 @@ In order to run this project, you need to have:
 
 ## How to Run This Project?
 
-1. Start Docker locally, make sure the Docker desktop is running
+1. Start Docker locally, make sure your Docker Desktop is running
 
 2. Pull the image from the Docker hub with the following code
 
@@ -34,7 +34,7 @@ docker run -it hellovivvvv/google-map-api:latest
 - AWS access key id
 - AWS secret access key
 
-5.After that, you're ready to have a preview of the results in your terminal, and you can get the data in csv format from your S3 bucket
+5. After that, you're ready to have a preview of the results in your terminal, and you can get the data in csv format from your S3 bucket
 
 
 ## Something Else?
